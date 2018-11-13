@@ -1,10 +1,17 @@
 import FluentSQLite
 import Vapor
+import Leaf
+
 
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     /// Register providers first
     try services.register(FluentSQLiteProvider())
+
+    /// Add Packages
+    try services.register(LeafProvider())
+
+
 
     /// Register routes to the router
     let router = EngineRouter.default()
@@ -29,5 +36,8 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     var migrations = MigrationConfig()
     migrations.add(model: Todo.self, database: .sqlite)
     services.register(migrations)
+
+
+    config.prefer(LeafRenderer.self, for: ViewRenderer.self)
 
 }
